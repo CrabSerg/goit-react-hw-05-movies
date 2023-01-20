@@ -14,7 +14,7 @@ import Header from './Header';
 const theme = createTheme({
   palette: {
     background: {
-      default: '#8689AC',
+      default: '#FFBB02',
     },
   },
 });
