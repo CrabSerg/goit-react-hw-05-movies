@@ -1,18 +1,16 @@
-import { Box } from '@mui/material';
-import { RiseLoader } from 'react-spinners';
+import { RotatingLines } from 'react-loader-spinner';
+import { Spiner } from './Loader.styled';
 
-export default function Loader(props) {
+export const Loader = () => {
   return (
-    <Box {...props}>
-      <RiseLoader
-        size={10}
-        color="#1976d2"
-        cssOverride={{
-          display: 'flex',
-          justifyContent: 'center',
-          margin: '10px 0',
-        }}
+    <Spiner>
+      <RotatingLines
+        strokeColor="grey"
+        strokeWidth="5"
+        animationDuration="0.75"
+        width="120"
+        visible={true}
       />
-    </Box>
+    </Spiner>
   );
-}
+};

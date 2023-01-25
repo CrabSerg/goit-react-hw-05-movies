@@ -1,63 +1,55 @@
+import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { fetchCastMovie } from 'components/apiMovie.js';
 import {
-  Card,
-  CardActionArea,
-  CardContent,
-  CardMedia,
-  Grid,
-  Typography,
-} from '@mui/material';
-import config from 'config';
-import { useLoaderData } from 'react-router-dom';
+  CardWrapper,
+  Container,
+  CastName,
+  CastInformation,
+} from './Cast.styled';
 
-export default function Cast() {
-  const data = useLoaderData();
+export const Cast = () => {
+  const [cast, setCast] = useState([]);
 
+  const { movieId } = useParams();
+
+  useEffect(() => {
+    const fatchCast = async () => {
+      try {
+        const { cast } = await fetchCastMovie(movieId);
+        setCast(cast);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fatchCast();
+  }, [movieId]);
+
+  if (cast.length === 0) {
+    return (
+      <CastInformation>We don't have any cast for this movie</CastInformation>
+    );
+  }
   return (
-    <Grid
-      container
-      spacing={{ xs: 2, md: 3 }}
-      columns={{ xs: 4, sm: 8, md: 18 }}
-    >
-      {data.cast.map(({ profile_path, character, name, id }) => {
-        const imageSrc = profile_path
-          ? `${config.urls.theMovies.image.poster}${profile_path}`
-          : '';
+    <Container>
+      {cast.map(({ id, profile_path, name, character }) => {
         return (
-          <Grid item xs={2} sm={2} md={3} key={id}>
-            <Card sx={{ maxWidth: 170, height: '100%' }}>
-              <CardActionArea
-                sx={{
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'flex-start',
-                }}
-              >
-                <CardMedia
-                  component="img"
-                  height="210"
-                  image={imageSrc}
-                  alt={name}
-                  sx={{ height: '255px', objectFit: 'cover' }}
-                />
-                <CardContent sx={{ p: 1 }}>
-                  <Typography
-                    gutterBottom
-                    variant="body2"
-                    component="div"
-                    fontWeight="700"
-                  >
-                    {name}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {character}
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
+          <CardWrapper key={id}>
+            <img
+              src={`https://image.tmdb.org/t/p/w500${profile_path}`}
+              alt={name}
+            />
+            <CastName>
+              <b> Name:</b>
+              {name}
+            </CastName>
+            <CastName>
+              <b>Character:</b>
+              {character}
+            </CastName>
+          </CardWrapper>
         );
       })}
-    </Grid>
+    </Container>
   );
-}
+};

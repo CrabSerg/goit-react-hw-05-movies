@@ -1,46 +1,38 @@
-import { Card, CardActionArea, CardMedia, Grid } from '@mui/material';
-import { Link, useLocation } from 'react-router-dom';
-import config from 'config';
-import { MoviesListPropTypes } from './MoviesList.props';
+import { Loader } from 'components/Loader/Loader';
+import { Suspense } from 'react';
+import { NavLink, Outlet } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { CardWrapper, Container, MovieName } from './MoviesList.styled';
+import PropTypes from 'prop-types';
 
-export default function MoviesList({ list }) {
+export const MoviesList = ({ movies }) => {
   const location = useLocation();
-  const path = location.pathname === '/' ? 'movies/' : '';
-
   return (
-    <Grid
-      container
-      spacing={{ xs: 2, md: 3 }}
-      columns={{ xs: 4, sm: 8, md: 15 }}
-    >
-      {list.map(({ id, poster_path, title }) => {
-        // TODO: Додати дефаултнє зображення
-        const imageSrc = poster_path
-          ? `${config.urls.theMovies.image.poster}${poster_path}`
-          : '';
-        return (
-          <Grid item xs={2} sm={2} md={3} key={id}>
-            <Card sx={{ maxWidth: 250, height: '100%' }}>
-              <CardActionArea
-                component={Link}
-                to={`${path}${id}`}
-                state={{ from: location }}
-                sx={{ height: '100%' }}
-              >
-                <CardMedia
-                  component="img"
-                  height="250"
-                  image={imageSrc}
-                  alt={title}
-                  sx={{ height: '100%', objectFit: 'cover' }}
-                />
-              </CardActionArea>
-            </Card>
-          </Grid>
-        );
-      })}
-    </Grid>
+    <Container>
+      {movies?.map(({ id, poster_path, original_title }) => (
+        <CardWrapper key={id}>
+          <NavLink to={`/movies/${id}`} state={{ from: location }}>
+            <img
+              src={`https://image.tmdb.org/t/p/w500${poster_path}`}
+              alt={original_title}
+            />
+            <MovieName>{original_title}</MovieName>
+          </NavLink>
+        </CardWrapper>
+      ))}
+      <Suspense fallback={<Loader />}>
+        <Outlet />
+      </Suspense>
+    </Container>
   );
-}
+};
 
-MoviesList.propTypes = MoviesListPropTypes;
+MoviesList.propTypes = {
+  movies: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      poster_path: PropTypes.string,
+      original_title: PropTypes.string,
+    })
+  ),
+};

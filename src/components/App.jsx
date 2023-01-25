@@ -1,48 +1,46 @@
-import {
-  Box,
-  Container,
-  createTheme,
-  CssBaseline,
-  ThemeProvider,
-} from '@mui/material';
-import { Suspense } from 'react';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
-import { Outlet } from 'react-router-dom';
-import Header from './Header';
+import { lazy } from 'react';
 
-const theme = createTheme({
-  palette: {
-    background: {
-      default: '#fed56f',
-    },
-  },
-});
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnMount: true,
-      refetchOnWindowFocus: false,
-    },
-  },
-});
+import { Route, Routes } from 'react-router-dom';
+import { Home } from 'pages/Home/Home';
+import { Layout } from 'components/Layout/Layout';
+import { NotFound } from 'pages/NotFound/NotFound';
 
+const Movies = lazy(() =>
+  import('../pages/Movies/Movies').then(module => ({
+    ...module,
+    default: module.Movies,
+  }))
+);
+const MovieDetails = lazy(() =>
+  import('../pages/MovieDetails/MovieDetails').then(module => ({
+    ...module,
+    default: module.MovieDetails,
+  }))
+);
+const Cast = lazy(() =>
+  import('./Cast/Cast').then(module => ({
+    ...module,
+    default: module.Cast,
+  }))
+);
+const Reviews = lazy(() =>
+  import('./Reviews/Reviews').then(module => ({
+    ...module,
+    default: module.Reviews,
+  }))
+);
 export const App = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Header />
-
-        <Box as="main" py={3}>
-          <Container maxWidth="lg">
-            <Suspense fallback={null}>
-              <Outlet />
-            </Suspense>
-          </Container>
-        </Box>
-      </ThemeProvider>
-      <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
-    </QueryClientProvider>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<Home />} />
+        <Route path="movies" element={<Movies />} />
+        <Route path="movies/:movieId" element={<MovieDetails />}>
+          <Route path="cast" element={<Cast />} />
+          <Route path="reviews" element={<Reviews />} />
+        </Route>
+        <Route path="*" element={<NotFound />} />
+      </Route>
+    </Routes>
   );
 };

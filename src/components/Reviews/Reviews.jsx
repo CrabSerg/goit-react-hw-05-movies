@@ -1,57 +1,43 @@
-import {
-  Card,
-  CardActionArea,
-  CardContent,
-  Grid,
-  Typography,
-} from '@mui/material';
-import { useLoaderData } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { fetchReviewsMovie } from 'components/apiMovie.js';
+import { Container, CardWrapper, ReviewsInformation } from './Reviews.styled';
 
-export default function Reviews() {
-  const data = useLoaderData();
+export const Reviews = () => {
+  const [reviews, setReviews] = useState([]);
+
+  const { movieId } = useParams();
+  useEffect(() => {
+    const fatchCast = async () => {
+      try {
+        const { results } = await fetchReviewsMovie(movieId);
+        setReviews(results);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fatchCast();
+  }, [movieId]);
+  if (reviews.length === 0) {
+    return (
+      <ReviewsInformation>
+        We don't have any rewievs for this movie
+      </ReviewsInformation>
+    );
+  }
 
   return (
-    <>
-      {data.results.length === 0 ? (
-        <Typography variant="body2" component="div">
-          Reviews not found
-        </Typography>
-      ) : (
-        <Grid
-          container
-          spacing={{ xs: 2, md: 3 }}
-          columns={{ xs: 4, sm: 8, md: 1 }}
-        >
-          {data.results.map(({ author, content, updated_at, id }) => (
-            <Grid item xs={2} sm={2} md={3} key={id}>
-              <Card sx={{ maxWidth: '100%', height: '100%' }}>
-                <CardActionArea>
-                  <CardContent>
-                    <Typography
-                      gutterBottom
-                      variant="body2"
-                      component="div"
-                      fontWeight="700"
-                    >
-                      {author}{' '}
-                      <Typography
-                        variant="body2"
-                        component="span"
-                        color="text.secondary"
-                      >
-                        ({new Date(updated_at).toDateString()})
-                      </Typography>
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {content}
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      )}
-    </>
+    <Container>
+      {reviews.map(({ id, author, content }) => {
+        return (
+          <CardWrapper key={id}>
+            <p>
+              <b>Author: {author}</b>
+            </p>
+            <p>{content}</p>
+          </CardWrapper>
+        );
+      })}
+    </Container>
   );
-}
+};
