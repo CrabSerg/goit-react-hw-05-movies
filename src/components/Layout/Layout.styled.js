@@ -14,7 +14,7 @@ export const Header = styled.header`
   gap: 12px;
   padding: 8px 0;
   margin-bottom: 16px;
-  border-bottom: 3px solid gray;
+  border-bottom: 3px solid rgb(108,180,184);
   box-shadow: 0px 1px 2px 0px rgba(0,255,255,0.7),
   1px 2px 4px 0px rgba(0,255,255,0.7),
   2px 4px 8px 0px rgba(0,255,255,0.7),
