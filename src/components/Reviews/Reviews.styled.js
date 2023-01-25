@@ -21,5 +21,5 @@ export const ReviewsInformation = styled.p`
   padding: 4px;
   margin-bottom: 0;
   font-weight: 700;
-  color: black;
+  color: blue;
 `;

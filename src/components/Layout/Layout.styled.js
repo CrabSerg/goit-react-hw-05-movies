@@ -15,8 +15,10 @@ export const Header = styled.header`
   padding: 8px 0;
   margin-bottom: 16px;
   border-bottom: 3px solid gray;
-  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),
-    0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+  box-shadow: 0px 1px 2px 0px rgba(0,255,255,0.7),
+  1px 2px 4px 0px rgba(0,255,255,0.7),
+  2px 4px 8px 0px rgba(0,255,255,0.7),
+  2px 4px 16px 0px rgba(0,255,255,0.7);
 
   > nav {
     display: flex;
@@ -35,7 +37,7 @@ export const StyleLink = styled(NavLink)`
       0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
   }
   &.active {
-    color: white;
-    background-color: orangered;
+    color: #FFD100;
+    background-color: #005EB8;
   }
 `;

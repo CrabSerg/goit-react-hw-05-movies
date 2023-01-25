@@ -28,5 +28,5 @@ export const MovieName = styled.h2`
   padding: 4px;
   margin-top: 8px;
   margin-bottom: 0;
-  color: black;
+  color: #E4BA6A;
 `;

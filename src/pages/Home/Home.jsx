@@ -20,11 +20,11 @@ export const Home = () => {
   }, []);
 
   if (!movies) {
-    return <Title>Something went wrong, please try again!</Title>;
+    return <Title>Something wrong, please try again!</Title>;
   }
   return (
     <main>
-      <Title>Popular movies today</Title>
+      <Title>Popular movies</Title>
       <MoviesList movies={movies} />
     </main>
   );
